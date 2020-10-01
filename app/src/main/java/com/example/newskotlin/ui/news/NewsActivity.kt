@@ -48,7 +48,7 @@ class NewsActivity : AppCompatActivity(), NewsAdapter.OnItemClickListener {
                 if (scrollY == v.getChildAt(0).measuredHeight - v.measuredHeight) {
                     if (mViewModel.articles.value!!.size >= 10) {
                         page++
-                        main_progress.visibility = View.VISIBLE
+//                        main_progress.visibility = View.VISIBLE
                         if (isRequest!!) {
                             mViewModel.fetchEverything("bitcoin", page)
                         } else {
