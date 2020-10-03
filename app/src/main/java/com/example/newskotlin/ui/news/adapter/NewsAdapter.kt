@@ -29,10 +29,10 @@ class NewsAdapter (private var list: MutableList<Articles>,
         }
     }
 
-//    fun update(list: MutableList<Articles>) {
-//        this.list.addAll(list)
-//        notifyDataSetChanged()
-//    }
+    fun update(list: MutableList<Articles>) {
+        this.list.addAll(list)
+        notifyDataSetChanged()
+    }
 
     override fun getItemCount(): Int = list.size
 

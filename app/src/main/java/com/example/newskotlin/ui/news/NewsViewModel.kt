@@ -7,13 +7,14 @@ import com.example.newskotlin.repository.NewsRepository
 
 class NewsViewModel : ViewModel() {
 
-//    var isLastPage = 0
-//    var page = 0
+   var isLastPage = 0
+   var page = 0
 
     var articles = MutableLiveData<MutableList<Articles>>()
 
 
-    fun fetchEverything(query: String, page: Int) {
+    fun fetchEverything(query: String) {
+        page += 1
         articles = NewsRepository().fetchEverything(query, page)!!
     }
     fun getNews(page: Int){

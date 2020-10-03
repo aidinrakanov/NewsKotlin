@@ -12,6 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.newskotlin.AppNews
 import com.example.newskotlin.R
 import com.example.newskotlin.extansion.showToast
 import com.example.newskotlin.models.Articles
@@ -34,8 +35,8 @@ class NewsActivity : AppCompatActivity(), NewsAdapter.OnItemClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         initViews()
-        mViewModel.fetchEverything("football",pageIems)
         recyclerSets()
+        mViewModel.getNews(page)
         subscribeToNews()
         search()
         scrollNews()
@@ -48,8 +49,8 @@ class NewsActivity : AppCompatActivity(), NewsAdapter.OnItemClickListener {
                     if (mViewModel.articles.value!!.size >= 10) {
                         page++
                         main_progress.visibility = View.VISIBLE
-                        if (isRequest!!) {
-                            mViewModel.fetchEverything(main_search.text.toString(), page)
+                        if (flag!!) {
+                            mViewModel.fetchEverything("kotlin")
                         } else {
                             mViewModel.getNews(page)
                         }
@@ -64,7 +65,7 @@ class NewsActivity : AppCompatActivity(), NewsAdapter.OnItemClickListener {
             if (it != null) {
                 if (main_search.text.isNotEmpty()) {
                     list.clear()
-                    mViewModel.fetchEverything(main_search.text.toString(), pageIems)
+                    mViewModel.fetchEverything(main_search.text.toString())
                     subscribeToNews()
                     adapter.notifyDataSetChanged()
                 }
@@ -86,6 +87,15 @@ class NewsActivity : AppCompatActivity(), NewsAdapter.OnItemClickListener {
         adapter = NewsAdapter(list, this)
     }
 
+
+//    private fun subscribeToTopHeadlines() {
+//        mViewModel.articles.observe(this, Observer {
+//            mViewModel.getNews(page)
+//            list.addAll(it)
+//            adapter.notifyDataSetChanged()
+//            main_progress.visibility = View.GONE
+//        })
+//    }
     private fun subscribeToNews() {
         mViewModel.articles.observe(this, Observer {
             list.addAll(it)
@@ -93,6 +103,7 @@ class NewsActivity : AppCompatActivity(), NewsAdapter.OnItemClickListener {
             main_progress.visibility = View.GONE
         })
     }
+
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_bar, menu)
@@ -103,24 +114,24 @@ class NewsActivity : AppCompatActivity(), NewsAdapter.OnItemClickListener {
         val id = item.itemId
         if (id == R.id.action_change_news) {
             flag = if (flag!!) {
-                showToast(this, "Top_headlines")
-                main_search.visibility = View.GONE
-                list.clear()
-                page = 1
-                mViewModel.getNews(page)
-                subscribeToNews()
-                item.setIcon(R.drawable.ic_newss)
-                isRequest = false
-                false
-            } else {
-                showToast(this, "Everythings")
+                showToast(this, "Every")
                 main_search.visibility = View.VISIBLE
                 list.clear()
-                mViewModel.fetchEverything("football", pageIems)
+                mViewModel.fetchEverything("kotlin")
+                subscribeToNews()
+                item.setIcon(R.drawable.ic_newss)
+                page = 0
+                isRequest = true
+                false
+            } else {
+                showToast(this, "Top")
+                main_search.visibility = View.GONE
+                list.clear()
+                mViewModel.getNews(page)
                 item.setIcon(R.drawable.ic_get)
                 subscribeToNews()
-                isRequest = true
-                page = 1
+                isRequest = false
+                page = 0
                 true
             }
         }
