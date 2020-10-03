@@ -6,9 +6,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.newskotlin.R
+import com.example.newskotlin.extansion.loadImage
 import com.example.newskotlin.models.Articles
+import com.example.newskotlin.ui.details.DetailsActivity
 import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.list_news.*
+import kotlinx.android.synthetic.main.item_news.*
 
 class NewsAdapter (private var list: MutableList<Articles>,
                   private val onNewsClickListener: OnItemClickListener):
@@ -17,7 +19,7 @@ class NewsAdapter (private var list: MutableList<Articles>,
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewsViewHolder {
         return NewsViewHolder(
             LayoutInflater.from(parent.context)
-            .inflate(R.layout.list_news, parent, false))
+            .inflate(R.layout.item_news, parent, false))
     }
 
     override fun onBindViewHolder(holder: NewsViewHolder, position: Int) {
@@ -27,6 +29,11 @@ class NewsAdapter (private var list: MutableList<Articles>,
         }
     }
 
+//    fun update(list: MutableList<Articles>) {
+//        this.list.addAll(list)
+//        notifyDataSetChanged()
+//    }
+
     override fun getItemCount(): Int = list.size
 
     class NewsViewHolder(override val containerView: View) :
@@ -34,9 +41,9 @@ class NewsAdapter (private var list: MutableList<Articles>,
         fun bind(article: Articles){
             main_title.text = article.title
             main_desc.text = article.description
-            if (article.urlToImage != null){
-                Glide.with(main_image.context).load(article.urlToImage).into(main_image)
-            } else{
+                if (article.urlToImage !=null){
+                    main_image.loadImage(context = main_image.context, url = article.urlToImage)
+                }else{
                 main_image.setImageResource(R.drawable.no_image)
             }
         }

@@ -7,6 +7,9 @@ import com.example.newskotlin.repository.NewsRepository
 
 class NewsViewModel : ViewModel() {
 
+//    var isLastPage = 0
+//    var page = 0
+
     var articles = MutableLiveData<MutableList<Articles>>()
 
 

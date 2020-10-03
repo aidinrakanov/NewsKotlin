@@ -26,16 +26,15 @@ class NewsActivity : AppCompatActivity(), NewsAdapter.OnItemClickListener {
     private lateinit var adapter: NewsAdapter
     private var flag: Boolean? = true
     private var isRequest: Boolean? = true
-    private var page = 1
+    private var page = 0
     private var pageIems = 10
 
 
-    private lateinit var viewModel: NewsViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         initViews()
-        mViewModel.fetchEverything("bitcoin", pageIems)
+        mViewModel.fetchEverything("football",pageIems)
         recyclerSets()
         subscribeToNews()
         search()
@@ -50,7 +49,7 @@ class NewsActivity : AppCompatActivity(), NewsAdapter.OnItemClickListener {
                         page++
                         main_progress.visibility = View.VISIBLE
                         if (isRequest!!) {
-                            mViewModel.fetchEverything("bitcoin", page)
+                            mViewModel.fetchEverything(main_search.text.toString(), page)
                         } else {
                             mViewModel.getNews(page)
                         }
@@ -105,6 +104,7 @@ class NewsActivity : AppCompatActivity(), NewsAdapter.OnItemClickListener {
         if (id == R.id.action_change_news) {
             flag = if (flag!!) {
                 showToast(this, "Top_headlines")
+                main_search.visibility = View.GONE
                 list.clear()
                 page = 1
                 mViewModel.getNews(page)
@@ -114,8 +114,9 @@ class NewsActivity : AppCompatActivity(), NewsAdapter.OnItemClickListener {
                 false
             } else {
                 showToast(this, "Everythings")
+                main_search.visibility = View.VISIBLE
                 list.clear()
-                mViewModel.fetchEverything("bitcoin", pageIems)
+                mViewModel.fetchEverything("football", pageIems)
                 item.setIcon(R.drawable.ic_get)
                 subscribeToNews()
                 isRequest = true
@@ -127,10 +128,8 @@ class NewsActivity : AppCompatActivity(), NewsAdapter.OnItemClickListener {
     }
 
     override fun onClickListener(article: Articles) {
-        startActivity(
-            Intent(this, DetailsActivity::class.java)
-                .setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-                .putExtra("send", article)
-        )
+        DetailsActivity.instanceActivity(this, article)
     }
+
+
 }

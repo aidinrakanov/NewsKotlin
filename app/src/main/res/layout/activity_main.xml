@@ -28,7 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintLeft_toLeftOf="parent"
-            tools:listitem="@layout/list_news" />
+            tools:listitem="@layout/item_news" />
     </androidx.core.widget.NestedScrollView>
 
     <ProgressBar
