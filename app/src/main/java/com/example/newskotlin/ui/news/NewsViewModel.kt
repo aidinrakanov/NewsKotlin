@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import com.example.newskotlin.models.Articles
 import com.example.newskotlin.repository.NewsRepository
 
-class NewsViewModel : ViewModel() {
+class NewsViewModel(val newsRepository: NewsRepository) : ViewModel() {
 
    var isLastPage = 0
    var page = 0
@@ -15,10 +15,10 @@ class NewsViewModel : ViewModel() {
 
     fun fetchEverything(query: String) {
         page += 1
-        articles = NewsRepository().fetchEverything(query, page)!!
+        articles = newsRepository.fetchEverything(query, page)!!
     }
     fun getNews(page: Int){
-       articles = NewsRepository().getNews(page)!!
+       articles = newsRepository.getNews(page)!!
     }
 
 }

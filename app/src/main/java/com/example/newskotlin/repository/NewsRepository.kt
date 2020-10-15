@@ -5,11 +5,13 @@ import com.example.newskotlin.Constants
 import com.example.newskotlin.models.Articles
 import com.example.newskotlin.models.ResponseBody
 import com.example.newskotlin.AppNews
+import com.example.newskotlin.network.NewsApi
+import com.example.newskotlin.network.RetrofitClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class NewsRepository {
+class NewsRepository(val newsApi: NewsApi) {
 
     private val everythingDefaultSize = 10
     private val ru = "ru"
