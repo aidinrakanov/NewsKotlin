@@ -8,7 +8,7 @@ import com.example.newskotlin.network.Resource
 import com.example.newskotlin.repository.NewsRepository
 
 
-class EverythinsViewModel(private val repository: NewsRepository) : BaseViewModel() {
+class EverythinsViewModel (private val repository: NewsRepository) : BaseViewModel() {
 
    var page = 0
 

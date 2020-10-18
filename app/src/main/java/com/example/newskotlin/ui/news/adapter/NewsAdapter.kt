@@ -34,6 +34,11 @@ class NewsAdapter (private var list: MutableList<Articles>):
         notifyDataSetChanged()
     }
 
+
+    fun setOnClick(onItemClickListener: OnItemClickListener) {
+        this.onNewsClickListener = onItemClickListener
+    }
+
     override fun getItemCount(): Int = list.size
 
     class NewsViewHolder(override val containerView: View) :

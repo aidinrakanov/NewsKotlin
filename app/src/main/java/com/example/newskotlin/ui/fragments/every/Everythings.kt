@@ -1,10 +1,6 @@
 package com.example.newskotlin.ui.fragments.every
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.core.widget.NestedScrollView
+
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -16,42 +12,30 @@ import com.example.newskotlin.network.Status
 import com.example.newskotlin.ui.details.DetailsActivity
 import com.example.newskotlin.ui.news.adapter.NewsAdapter
 import kotlinx.android.synthetic.main.everythins_fragment.*
-import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class Everythins : BaseFragment<EverythinsViewModel>(R.layout.everythins_fragment), NewsAdapter.OnItemClickListener {
 
-    override val viewModel by inject<EverythinsViewModel>()
+class Everythings: BaseFragment<EverythinsViewModel>(R.layout.everythins_fragment) {
+
+    override val viewModel by viewModel <EverythinsViewModel>()
     private lateinit var adapterEvery: NewsAdapter
     private var listEvery: MutableList<Articles> = mutableListOf()
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.everythins_fragment, container, false)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        listEvery = mutableListOf()
-        adapterEvery = NewsAdapter(listEvery)
-        initial()
-        subscribeEvery()
-        search()
-        scroll()
-    }
 
     override fun initial() {
+        search()
+        scroll()
         recycler()
-
+        detailStart()
     }
 
+
     private fun recycler() {
-        main_recycler.apply {
-            layoutManager = LinearLayoutManager(context)
-            adapter = adapterEvery
+        adapterEvery = NewsAdapter(listEvery)
+        every_recycler.apply {
+            layoutManager = LinearLayoutManager(this@Everythings.context)
             addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+            adapter = adapterEvery
         }
     }
 
@@ -62,7 +46,7 @@ class Everythins : BaseFragment<EverythinsViewModel>(R.layout.everythins_fragmen
 
     private fun subscribeEvery() {
         viewModel.articles.observe(viewLifecycleOwner, Observer {
-            when(it.status){
+            when (it.status) {
                 Status.SUCCESS -> {
                     adapterEvery.update(listEvery)
                 }
@@ -71,7 +55,7 @@ class Everythins : BaseFragment<EverythinsViewModel>(R.layout.everythins_fragmen
     }
 
     private fun scroll() {
-        main_recycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        every_recycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
                 if (!recyclerView.canScrollVertically(1)) {
@@ -95,7 +79,11 @@ class Everythins : BaseFragment<EverythinsViewModel>(R.layout.everythins_fragmen
         }
     }
 
-    override fun onClickListener(article: Articles) {
-        DetailsActivity.instanceActivity(this.activity, article)
+    private fun detailStart() {
+        adapterEvery.setOnClick(object : NewsAdapter.OnItemClickListener{
+            override fun onClickListener(article: Articles) {
+                DetailsActivity.instanceActivity(this@Everythings.activity, article)
+            }
+        })
     }
 }

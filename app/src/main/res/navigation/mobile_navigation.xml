@@ -13,7 +13,7 @@
 
     <fragment
         android:id="@+id/menu_top"
-        android:name="com.example.newskotlin.ui.fragments.every.Everythins"
+        android:name="com.example.newskotlin.ui.fragments.every.Everythings"
         android:label="@string/top"
         tools:layout="@layout/everythins_fragment" />
 
