@@ -4,17 +4,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.example.newskotlin.R
 import com.example.newskotlin.extansion.loadImage
 import com.example.newskotlin.models.Articles
-import com.example.newskotlin.ui.details.DetailsActivity
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_news.*
 
-class NewsAdapter (private var list: MutableList<Articles>,
-                  private val onNewsClickListener: OnItemClickListener):
+class NewsAdapter (private var list: MutableList<Articles>):
     RecyclerView.Adapter<NewsAdapter.NewsViewHolder>(){
+
+    private lateinit var onNewsClickListener: OnItemClickListener
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewsViewHolder {
         return NewsViewHolder(
@@ -47,6 +47,7 @@ class NewsAdapter (private var list: MutableList<Articles>,
                 main_image.setImageResource(R.drawable.no_image)
             }
         }
+
     }
 
     interface OnItemClickListener{

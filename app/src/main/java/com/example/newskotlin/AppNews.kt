@@ -11,11 +11,10 @@ class AppNews : Application() {
 
         val retrofitClient = RetrofitClient()
 
-        fun provideNews() = retrofitClient.provideRetrofit.create(NewsApi::class.java)
+
 
     override fun onCreate() {
         super.onCreate()
-        provideNews()
         startKoin {androidContext(this@AppNews)
             newsModule}
     }

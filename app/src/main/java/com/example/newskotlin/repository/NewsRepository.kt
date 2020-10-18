@@ -1,45 +1,39 @@
 package com.example.newskotlin.repository
 
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.liveData
 import com.example.newskotlin.Constants
 import com.example.newskotlin.models.Articles
 import com.example.newskotlin.models.ResponseBody
 import com.example.newskotlin.AppNews
 import com.example.newskotlin.network.NewsApi
+import com.example.newskotlin.network.Resource
 import com.example.newskotlin.network.RetrofitClient
+import kotlinx.coroutines.Dispatchers
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class NewsRepository(val newsApi: NewsApi) {
 
-    private val everythingDefaultSize = 10
+    private val defaultSize = 10
     private val ru = "ru"
 
-    fun fetchEverything(query: String?, page: Int) : MutableLiveData<MutableList<Articles>>? {
-        var data:MutableLiveData<MutableList<Articles>>? = MutableLiveData()
-        AppNews().provideNews().fetchEverything(query, Constants.apiKey, page,  everythingDefaultSize)
-            .enqueue(object : Callback<ResponseBody>{
-                override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                    data?.value = response.body()?.articles }
+   fun fetchEverythings(query: String?, page : Int) = liveData(Dispatchers.IO) {
+       emit(Resource.loading(data = null))
+       try {
+           emit(Resource.success(data = newsApi.fetchEverything(query, Constants.apiKey, defaultSize ,page)))
+       }catch (ex : Exception){
+           emit(Resource.error(data = null, message = ex.message ?: "Error every"))
+       }
+   }
 
-                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                    data = null }
-            })
-        return data
-    }
-
-    fun getNews(page : Int) : MutableLiveData<MutableList<Articles>>?{
-        var dataTop : MutableLiveData<MutableList<Articles>>? = MutableLiveData()
-        AppNews().provideNews().getNews(ru, Constants.apiKey, page, everythingDefaultSize)
-            .enqueue(object : Callback<ResponseBody>{
-                override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                    dataTop?.value= response.body()?.articles }
-
-                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                   dataTop = null }
-
-            })
-        return dataTop
-    }
+   fun getTopHeadlines() = liveData(Dispatchers.IO) {
+       emit(Resource.loading(data = null))
+       try {
+           emit(Resource.success(data = newsApi.getNews(ru, Constants.apiKey, defaultSize , 0)))
+       }catch (ex : Exception){
+           emit(Resource.error(data = null, message = ex.message ?: "Error top"))
+       }
+   }
 }

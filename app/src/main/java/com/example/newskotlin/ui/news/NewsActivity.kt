@@ -1,146 +1,43 @@
 package com.example.newskotlin.ui.news
 
-import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.widget.NestedScrollView
-import androidx.core.widget.doAfterTextChanged
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.newskotlin.AppNews
+import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.setupWithNavController
 import com.example.newskotlin.R
-import com.example.newskotlin.extansion.showToast
-import com.example.newskotlin.models.Articles
-import com.example.newskotlin.ui.details.DetailsActivity
-import com.example.newskotlin.ui.news.adapter.NewsAdapter
+import com.example.newskotlin.ui.fragments.every.Everythins
+import com.example.newskotlin.ui.fragments.top.Top
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 
-class NewsActivity : AppCompatActivity(), NewsAdapter.OnItemClickListener {
+class NewsActivity : AppCompatActivity(){
 
-    private lateinit var list: MutableList<Articles>
-    private lateinit var mViewModel: NewsViewModel
-    private lateinit var adapter: NewsAdapter
-    private var flag: Boolean? = true
-    private var isRequest: Boolean? = true
-    private var page = 0
-    private var pageIems = 10
-
+    private lateinit var navView: BottomNavigationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        initViews()
-        recyclerSets()
-        mViewModel.getNews(page)
-        subscribeToNews()
-        search()
-        scrollNews()
-    }
+        val everythins = Everythins()
+        val top = Top()
 
-    private fun scrollNews() {
-        main_scroll.setOnScrollChangeListener(
-            NestedScrollView.OnScrollChangeListener { v, _, scrollY, _, _ ->
-                if (scrollY == v.getChildAt(0).measuredHeight - v.measuredHeight) {
-                    if (mViewModel.articles.value!!.size >= 10) {
-                        page++
-                        main_progress.visibility = View.VISIBLE
-                        if (flag!!) {
-                            mViewModel.fetchEverything("kotlin")
-                        } else {
-                            mViewModel.getNews(page)
-                        }
-                        subscribeToNews()
-                    }
-                }
-            })
-    }
-
-    private fun search() {
-        main_search.doAfterTextChanged {
-            if (it != null) {
-                if (main_search.text.isNotEmpty()) {
-                    list.clear()
-                    mViewModel.fetchEverything(main_search.text.toString())
-                    subscribeToNews()
-                    adapter.notifyDataSetChanged()
-                }
+        makeCurrentFragment(top)
+        bottomNav.setOnNavigationItemSelectedListener {
+            when(it.itemId){
+                R.id.menu_top -> makeCurrentFragment(top)
+                R.id.menu_every -> makeCurrentFragment(everythins)
             }
+            true
         }
     }
 
-    private fun recyclerSets() {
-        main_recycler.apply {
-            layoutManager = LinearLayoutManager(this@NewsActivity)
-            adapter = this@NewsActivity.adapter
-            addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+    private fun makeCurrentFragment(fragment: Fragment) =
+        supportFragmentManager.beginTransaction().apply {
+            replace(R.id.nav_host_fragment, fragment)
+            commit()
         }
-    }
-
-    private fun initViews() {
-        mViewModel = ViewModelProvider(this).get(NewsViewModel::class.java)
-        list = mutableListOf()
-        adapter = NewsAdapter(list, this)
-    }
-
-
-//    private fun subscribeToTopHeadlines() {
-//        mViewModel.articles.observe(this, Observer {
-//            mViewModel.getNews(page)
-//            list.addAll(it)
-//            adapter.notifyDataSetChanged()
-//            main_progress.visibility = View.GONE
-//        })
-//    }
-    private fun subscribeToNews() {
-        mViewModel.articles.observe(this, Observer {
-            list.addAll(it)
-            adapter.notifyDataSetChanged()
-            main_progress.visibility = View.GONE
-        })
-    }
-
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_bar, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val id = item.itemId
-        if (id == R.id.action_change_news) {
-            flag = if (flag!!) {
-                showToast(this, "Every")
-                main_search.visibility = View.VISIBLE
-                list.clear()
-                mViewModel.fetchEverything("kotlin")
-                subscribeToNews()
-                item.setIcon(R.drawable.ic_newss)
-                page = 0
-                isRequest = true
-                false
-            } else {
-                showToast(this, "Top")
-                main_search.visibility = View.GONE
-                list.clear()
-                mViewModel.getNews(page)
-                item.setIcon(R.drawable.ic_get)
-                subscribeToNews()
-                isRequest = false
-                page = 0
-                true
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
-    override fun onClickListener(article: Articles) {
-        DetailsActivity.instanceActivity(this, article)
-    }
 
 
 }

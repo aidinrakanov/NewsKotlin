@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/menu_top">
+
+    <fragment
+        android:id="@+id/menu_every"
+        android:name="com.example.newskotlin.ui.fragments.top.Top"
+        android:label="@string/every"
+        tools:layout="@layout/top_fragment" />
+
+    <fragment
+        android:id="@+id/menu_top"
+        android:name="com.example.newskotlin.ui.fragments.every.Everythins"
+        android:label="@string/top"
+        tools:layout="@layout/everythins_fragment" />
+
+</navigation>
