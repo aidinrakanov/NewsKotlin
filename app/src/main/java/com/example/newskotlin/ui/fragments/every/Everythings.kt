@@ -12,12 +12,12 @@ import com.example.newskotlin.network.Status
 import com.example.newskotlin.ui.details.DetailsActivity
 import com.example.newskotlin.ui.news.adapter.NewsAdapter
 import kotlinx.android.synthetic.main.everythins_fragment.*
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.android.ext.android.inject
 
 
-class Everythings: BaseFragment<EverythinsViewModel>(R.layout.everythins_fragment) {
+class Everythings : BaseFragment<EverythinsViewModel>(R.layout.everythins_fragment) {
 
-    override val viewModel by viewModel <EverythinsViewModel>()
+    override val viewModel by inject<EverythinsViewModel>()
     private lateinit var adapterEvery: NewsAdapter
     private var listEvery: MutableList<Articles> = mutableListOf()
 
@@ -80,7 +80,7 @@ class Everythings: BaseFragment<EverythinsViewModel>(R.layout.everythins_fragmen
     }
 
     private fun detailStart() {
-        adapterEvery.setOnClick(object : NewsAdapter.OnItemClickListener{
+        adapterEvery.setOnClick(object : NewsAdapter.OnItemClickListener {
             override fun onClickListener(article: Articles) {
                 DetailsActivity.instanceActivity(this@Everythings.activity, article)
             }

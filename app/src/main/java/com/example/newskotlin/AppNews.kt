@@ -10,7 +10,8 @@ class AppNews : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        startKoin {androidContext(this@AppNews)
+        startKoin {
+            androidContext(this@AppNews)
             newsModule}
     }
 }
