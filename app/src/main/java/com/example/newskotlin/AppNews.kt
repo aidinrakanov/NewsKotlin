@@ -12,6 +12,6 @@ class AppNews : Application() {
         super.onCreate()
         startKoin {
             androidContext(this@AppNews)
-            newsModule}
+            modules(newsModule)}
     }
 }

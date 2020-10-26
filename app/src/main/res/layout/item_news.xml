@@ -24,6 +24,14 @@
             app:layout_constraintLeft_toLeftOf="parent"
             android:src="@drawable/newslogo"/>
 
+        <ImageView
+            android:id="@+id/star"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            app:layout_constraintTop_toTopOf="@id/main_image"
+            app:layout_constraintRight_toRightOf="@id/main_image"
+            android:src="@drawable/ic_star"/>
+
         <TextView
             android:id="@+id/main_title"
             android:layout_width="match_parent"

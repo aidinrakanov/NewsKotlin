@@ -14,6 +14,7 @@ class NewsAdapter (private var list: MutableList<Articles>):
     RecyclerView.Adapter<NewsAdapter.NewsViewHolder>(){
 
     private lateinit var onNewsClickListener: OnItemClickListener
+    private lateinit var onLikelick: Likelick
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewsViewHolder {
@@ -39,11 +40,24 @@ class NewsAdapter (private var list: MutableList<Articles>):
         this.onNewsClickListener = onItemClickListener
     }
 
+    fun setOnClick(onLikelick: Likelick) {
+        this.onLikelick = onLikelick
+    }
+
     override fun getItemCount(): Int = list.size
 
     class NewsViewHolder(override val containerView: View) :
         RecyclerView.ViewHolder(containerView), LayoutContainer {
         fun bind(article: Articles){
+            star.setOnClickListener {
+                if (article.isFavorite) {
+                    star.setImageResource(R.drawable.ic_star)
+                } else {
+                    star.setImageResource(R.drawable.ic_star_gold)
+
+                }
+
+            }
             main_title.text = article.title
             main_desc.text = article.description
                 if (article.urlToImage !=null){
@@ -55,7 +69,12 @@ class NewsAdapter (private var list: MutableList<Articles>):
 
     }
 
+
     interface OnItemClickListener{
         fun onClickListener(article: Articles)
+    }
+
+    interface Likelick{
+        fun onLikeClick(article: Articles)
     }
 }

@@ -1,22 +1,29 @@
 package com.example.newskotlin.ui.fragments.top
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.newskotlin.BaseViewModel
+import com.example.newskotlin.models.Articles
 import com.example.newskotlin.models.ResponseBody
 import com.example.newskotlin.network.Resource
 import com.example.newskotlin.repository.NewsRepository
 
 class TopViewModel(private val repository: NewsRepository) : BaseViewModel() {
     var page = 0
+    var isLastPage = false
+    var isLoading = false
+    var getDB = MutableLiveData<List<Articles>>()
 
-    var articles = MutableLiveData<Resource<ResponseBody>>()
     var isPagination = MutableLiveData<Boolean>()
 
-
-    fun getNews() {
+    fun getNews() : LiveData<Resource<ResponseBody>> {
         page += 1
-        articles = repository.getTopHeadlines() as
-                MutableLiveData<Resource<ResponseBody>>
+        return repository.getTopHeadlines()
     }
+    fun fetchFav(){
+        getDB.value = repository.fetchFavorites().value
+    }
+    fun deleteFromFav(){
 
+    }
 }

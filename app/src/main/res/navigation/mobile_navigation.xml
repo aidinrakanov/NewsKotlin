@@ -17,4 +17,10 @@
         android:label="@string/top"
         tools:layout="@layout/everythins_fragment" />
 
+    <fragment
+        android:id="@+id/menu_favorites"
+        android:name="com.example.newskotlin.ui.fragments.favorites.Favorites"
+        android:label="favorites"
+        tools:layout="@layout/favorites_fragment"/>
+
 </navigation>

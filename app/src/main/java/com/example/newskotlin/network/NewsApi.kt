@@ -14,7 +14,7 @@ interface NewsApi {
         @Query("pageSize") size: Int
     ): ResponseBody
 
-    @GET("/v2/top-headlines")
+    @GET("v2/top-headlines")
     suspend fun getNews(
         @Query("country") country: String,
         @Query("apiKey") apiKey: String,

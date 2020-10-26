@@ -40,6 +40,7 @@
                 android:text="Desciption"
                 android:textSize="20sp" />
 
+
             <TextView
                 android:id="@+id/detail_date"
                 android:layout_width="wrap_content"

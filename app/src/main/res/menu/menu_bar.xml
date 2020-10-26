@@ -5,9 +5,13 @@
     <item
         android:id="@+id/menu_every"
         android:icon="@drawable/ic_newss"
-        android:title="AllNews" />
+        android:title="All News" />
     <item
         android:id="@+id/menu_top"
         android:icon="@drawable/ic_get"
-        android:title="TopNews" />
+        android:title="Top News" />
+    <item
+        android:id="@+id/menu_favorites"
+        android:icon="@drawable/ic_star"
+        android:title="Favorites" />
 </menu>

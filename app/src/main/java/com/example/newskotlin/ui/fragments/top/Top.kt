@@ -7,35 +7,47 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.newskotlin.BaseFragment
 import com.example.newskotlin.R
+import com.example.newskotlin.extansion.PaginationListener
 import com.example.newskotlin.models.Articles
 import com.example.newskotlin.network.Status
 import com.example.newskotlin.ui.details.DetailsActivity
 import com.example.newskotlin.ui.news.adapter.NewsAdapter
+import kotlinx.android.synthetic.main.everythins_fragment.*
 import kotlinx.android.synthetic.main.top_fragment.*
 import org.koin.android.ext.android.inject
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class Top : BaseFragment<TopViewModel>(R.layout.top_fragment){
+class Top : BaseFragment<TopViewModel>(R.layout.top_fragment) {
 
 
-    override val viewModel by viewModel<TopViewModel>()
+    override val viewModel by inject<TopViewModel>()
     private lateinit var adapterTop: NewsAdapter
+    private val linearManager = LinearLayoutManager(activity?.parent)
     private var listTop: MutableList<Articles> = mutableListOf()
 
 
     override fun initial() {
         recycler()
         detailStart()
-        scrollTop()
+        setupScroll()
+        getData()
+        viewModel.getNews()
+
+    }
+
+    private fun getData() {
+        viewModel.getDB.observe(viewLifecycleOwner, Observer {
+            adapterTop.update(it as MutableList<Articles>)
+        })
     }
 
     override fun observe() {
         subscribeTop()
     }
+
     private fun recycler() {
         adapterTop = NewsAdapter(listTop)
         top_recycler.apply {
-            layoutManager = LinearLayoutManager(this@Top.context)
+            layoutManager = LinearLayoutManager(activity?.parent)
             addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
             adapter = adapterTop
 
@@ -43,33 +55,46 @@ class Top : BaseFragment<TopViewModel>(R.layout.top_fragment){
     }
 
     private fun subscribeTop() {
-        viewModel.articles.observe(viewLifecycleOwner, Observer {
-            when(it.status){
+        viewModel.getNews().observe(viewLifecycleOwner, Observer {
+            val articles = it.data?.articles
+            when (it.status) {
                 Status.SUCCESS -> {
-                    adapterTop.update(listTop)
+                    if (articles != null) {
+                        adapterTop.update(articles)
+                    }
                 }
             }
         })
     }
-    private fun scrollTop() {
-        top_recycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-                if (!recyclerView.canScrollVertically(1)) {
-                    viewModel.isPagination.value = true
-                    viewModel.getNews()
-                }
+
+
+    private fun setupScroll() {
+        top_recycler?.addOnScrollListener(object : PaginationListener(linearManager) {
+            override fun isLastPage(): Boolean {
+                return viewModel.isLastPage
+            }
+
+            override fun isLoading(): Boolean {
+                return viewModel.isLoading
+            }
+
+            override fun loadMoreItems() {
+                viewModel.isLoading = true
+                subscribeTop()
             }
         })
+    }
+
+    private fun updateAdapter(list: MutableList<Articles>?) {
+        list?.let { adapterTop.update(it) }
     }
 
 
     private fun detailStart() {
-        adapterTop.setOnClick(object : NewsAdapter.OnItemClickListener{
+        adapterTop.setOnClick(object : NewsAdapter.OnItemClickListener {
             override fun onClickListener(article: Articles) {
-                DetailsActivity.instanceActivity(this@Top.activity, article)
+                DetailsActivity.instanceActivity(activity, article)
             }
         })
     }
-
 }
